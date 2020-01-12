@@ -24,7 +24,6 @@ func MapHandler(pathsToUrls map[string]string, fallback http.Handler) http.Handl
 
 func YAMLHandler(yml []byte, fallback http.Handler) (http.HandlerFunc, error) {
 	parsedYaml, err := parseYAML(yml)
-
 	if err != nil {
 		panic(err)
 		return nil, err
@@ -33,26 +32,26 @@ func YAMLHandler(yml []byte, fallback http.Handler) (http.HandlerFunc, error) {
 	return MapHandler(pathMap, fallback), nil
 }
 
-func buildMap(parsedYaml interface{}) map[string]string {
+func buildMap(parsedYaml []pathUrl) map[string]string {
 	pathsToUrls := make(map[string]string)
-
-	for _, value := range parsedYaml.([]interface{}) {
-		line := value.(map[interface{}]interface{})
-		pathsToUrls[line["path"].(string)] = line["url"].(string)
+	for _, value := range parsedYaml {
+		pathsToUrls[value.Path] = value.URL
 	}
-
 	return pathsToUrls
 }
 
-func parseYAML(yml []byte) (interface{}, error) {
-	var t interface{}
-	err := yaml.Unmarshal(yml, &t)
-
+func parseYAML(yml []byte) ([]pathUrl, error) {
+	var pathUrls []pathUrl
+	err := yaml.Unmarshal(yml, &pathUrls)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
+	return pathUrls, nil
+}
 
-	return t, nil
+type pathUrl struct {
+	Path string `yaml:"path"`
+	URL  string `yaml:"url"`
 }
 
 func main() {
