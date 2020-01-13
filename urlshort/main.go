@@ -7,9 +7,9 @@ import (
 	"net/http"
 )
 
-type urlPath struct {
-	path string
-	url  string
+type pathUrl struct {
+	Path string `yaml:"path"`
+	URL  string `yaml:"url"`
 }
 
 func MapHandler(pathsToUrls map[string]string, fallback http.Handler) http.HandlerFunc {
@@ -47,11 +47,6 @@ func parseYAML(yml []byte) ([]pathUrl, error) {
 		return nil, err
 	}
 	return pathUrls, nil
-}
-
-type pathUrl struct {
-	Path string `yaml:"path"`
-	URL  string `yaml:"url"`
 }
 
 func main() {
