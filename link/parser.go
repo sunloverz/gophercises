@@ -1,11 +1,9 @@
-package main
+package link
 
 import (
-	"fmt"
+	"strings"
 	"golang.org/x/net/html"
 	"io"
-	"log"
-	"os"
 )
 
 type Link struct {
@@ -51,21 +49,11 @@ func buildLink(node *html.Node) Link {
 
 func text(node *html.Node) string {
 	if node.Type == html.TextNode {
-		return node.Data
+		return strings.TrimSpace(node.Data) 
 	}
 	var value string
 	for c := node.FirstChild; c != nil; c = c.NextSibling {
 		value += text(c)
 	}
 	return value
-}
-
-func main() {
-	file, _ := os.Open("ex3.html")
-	defer file.Close()
-	links, err := Parse(file)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(links)
 }
