@@ -15,8 +15,33 @@ limitations under the License.
 */
 package main
 
-import "task/cmd"
+import (
+	// "fmt"
+	// bolt "go.etcd.io/bbolt"
+	"gophercises/task/cmd"
+)
 
 func main() {
+	cmd.DbInit()
 	cmd.Execute()
+
+	// path := "tasks.db"
+	// db, err := bolt.Open(path, 0666, nil)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// defer db.Close()
+
+	// db.Update(func(tx *bolt.Tx) error {
+	// 	b, _ := tx.CreateBucketIfNotExists([]byte("MyBucket"))
+	// 	err := b.Put([]byte("answer"), []byte("42"))
+	// 	return err
+	// })
+
+	// db.View(func(tx *bolt.Tx) error {
+	// 	b := tx.Bucket([]byte("MyBucket"))
+	// 	v := b.Get([]byte("answer"))
+	// 	fmt.Printf("The answer is: %s\n", v)
+	// 	return nil
+	// })
 }
