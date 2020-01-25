@@ -16,8 +16,9 @@ limitations under the License.
 package cmd
 
 import (
-	"strings"
 	"github.com/spf13/cobra"
+	"gophercises/task/db"
+	"strings"
 )
 
 // addCmd represents the add command
@@ -32,7 +33,7 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		CreateTask(strings.Join(args, " "))
+		db.CreateTask(strings.Join(args, " "))
 	},
 }
 

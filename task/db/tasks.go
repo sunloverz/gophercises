@@ -1,4 +1,4 @@
-package cmd
+package db
 
 import (
 	"encoding/binary"
@@ -25,7 +25,7 @@ func DbInit() error {
 			return err
 		}
 		return nil
-	})	
+	})
 }
 
 func CreateTask(title string) error {
@@ -48,11 +48,34 @@ func TaskList() ([]Task, error) {
 		return nil
 	})
 
-	if err!=nil {
+	if err != nil {
 		return nil, err
 	}
 
 	return tasks, nil
+}
+
+func TaskDo(number int) (string, error) {
+	tasks, err := TaskList()
+	if err != nil {
+		return "", err
+	}
+
+	for _, task := range tasks {
+		if task.Key == number {
+			DeleteTask(number)
+			return task.Value, nil
+		}
+	}
+
+	return "", nil
+}
+
+func DeleteTask(key int) error {
+	return db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket(taskBucket)
+		return b.Delete(itob(key))
+	})
 }
 
 func itob(v int) []byte {
@@ -64,4 +87,3 @@ func itob(v int) []byte {
 func btoi(b []byte) int {
 	return int(binary.BigEndian.Uint64(b))
 }
-
